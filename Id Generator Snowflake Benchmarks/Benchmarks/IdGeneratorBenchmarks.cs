@@ -17,7 +17,7 @@ public class IdGeneratorBenchmarks
     /// <summary>
     /// Số lượng ID cần tạo
     /// </summary>
-    [Params(1000, 10000, 100000, 1000000)]
+    [Params(1_000, 10_000, 1000_00, 1_000_000)]
     public int NumberOfIds { get; set; }
     #endregion
 

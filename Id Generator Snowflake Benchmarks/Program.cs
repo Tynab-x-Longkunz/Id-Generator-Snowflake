@@ -8,13 +8,14 @@ using static System.Threading.Tasks.Parallel;
 
 var idGen = new IdGenerator(0, 0);
 var genIds = new HashSet<ulong>();
-var numIds = 1000000;
+var numIds = 1_000_000;
+var top = 10;
 
 var sw = new Stopwatch();
 sw.Start();
 For(0, numIds, index =>
 {
-    var id = idGen?.NextId() ?? 0;
+    var id = idGen.NextId();
     lock (genIds)
     {
         if (!genIds.Add(id))
@@ -28,10 +29,16 @@ sw.Stop();
 var idsCnt = genIds.Count;
 if (numIds != idsCnt)
 {
-    WriteLine(new StringBuilder().Append("Handle mismatch between expected and actual number of generated IDs: ").Append(idsCnt).Append('/').Append(numIds).ToString());
+    WriteLine($"Handle mismatch between expected and actual number of generated IDs: {idsCnt} / {numIds}");
 }
 
-WriteLine($"Time: {sw.ElapsedMilliseconds} ms");
+WriteLine($"Time: {sw.ElapsedMilliseconds:#,#} ms\n");
+
+WriteLine($"Top {top:#,#} of {numIds:#,#} IDs:");
+foreach (var id in genIds.Take(top))
+{
+    WriteLine(id);
+}
 #endif
 
 #if RELEASE

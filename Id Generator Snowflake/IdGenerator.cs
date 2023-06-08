@@ -14,7 +14,7 @@ public class IdGenerator
     /// <summary>
     /// Thời điểm Epoch (được sử dụng làm offset cho timestamp)
     /// </summary>
-    public const ulong Twepoch = 1288834974000;
+    public const ulong Twepoch = 1_288_834_974_000;
 
     /// <summary>
     /// Số bit cần dịch trái để lưu trữ timestamp
@@ -67,20 +67,19 @@ public class IdGenerator
     {
         lock (_lock)
         {
-            var timestamp = TimeGen();
+            var ts = TimeGen();
 
-            if (timestamp < _lastTimestamp)
+            if (ts < _lastTimestamp)
             {
                 throw new Exception(ts_exc);
             }
-
-            if (_lastTimestamp == timestamp)
+            else if (ts == _lastTimestamp)
             {
                 Sequence = (Sequence + 1) & SEQ_MASK;
 
                 if (Sequence is 0)
                 {
-                    timestamp = _lastTimestamp.TilNextMillis();
+                    ts = _lastTimestamp.TilNextMillis();
                 }
             }
             else
@@ -88,8 +87,8 @@ public class IdGenerator
                 Sequence = default;
             }
 
-            _lastTimestamp = timestamp;
-            return ((timestamp - Twepoch) << TimestampLeftShift) | (DatacenterId << DC_ID_SHFT) | (WorkerId << WKR_ID_SHFT) | (Sequence & SEQ_MASK);
+            _lastTimestamp = ts;
+            return ((ts - Twepoch) << TimestampLeftShift) | (DatacenterId << DC_ID_SHFT) | (WorkerId << WKR_ID_SHFT) | (Sequence & SEQ_MASK);
         }
     }
     #endregion
