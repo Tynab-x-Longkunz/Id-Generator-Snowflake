@@ -8,7 +8,7 @@ namespace Id_Generator_Snowflake;
 public class IdGenerator
 {
     #region Fields
-    private ulong _lastTs = default;        // Thời điểm timestamp cuối cùng
+    private ulong _lastTimestamp = default; // Thời điểm timestamp cuối cùng
     private readonly object _lock = new();  // Đối tượng lock để đồng bộ hóa truy cập
 
     /// <summary>
@@ -47,7 +47,7 @@ public class IdGenerator
             throw new ArgumentException(new StringBuilder().Append(wkr_id_exc_pfx).Append(MAX_WKR_ID).Append(exc_sfx).ToString());
         }
 
-        if (datacenterId is > MAX_DC_ID)
+        if (datacenterId > MAX_DC_ID)
         {
             throw new ArgumentException(new StringBuilder().Append(dc_id_exc_pfx).Append(MAX_DC_ID).Append(exc_sfx).ToString());
         }
@@ -69,18 +69,18 @@ public class IdGenerator
         {
             var timestamp = TimeGen();
 
-            if (timestamp < _lastTs)
+            if (timestamp < _lastTimestamp)
             {
                 throw new Exception(ts_exc);
             }
 
-            if (_lastTs == timestamp)
+            if (_lastTimestamp == timestamp)
             {
                 Sequence = (Sequence + 1) & SEQ_MASK;
 
                 if (Sequence is 0)
                 {
-                    timestamp = _lastTs.TilNextMillis();
+                    timestamp = _lastTimestamp.TilNextMillis();
                 }
             }
             else
@@ -88,7 +88,7 @@ public class IdGenerator
                 Sequence = default;
             }
 
-            _lastTs = timestamp;
+            _lastTimestamp = timestamp;
             return ((timestamp - Twepoch) << TimestampLeftShift) | (DatacenterId << DC_ID_SHFT) | (WorkerId << WKR_ID_SHFT) | (Sequence & SEQ_MASK);
         }
     }

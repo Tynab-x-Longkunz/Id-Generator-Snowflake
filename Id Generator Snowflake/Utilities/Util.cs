@@ -14,13 +14,13 @@ internal static class Util
     /// </summary>
     internal static ulong TilNextMillis(this ulong lastTimestamp)
     {
-        var timestamp = TimeGen();
+        var ts = TimeGen();
 
-        while (timestamp <= lastTimestamp)
+        while (ts <= lastTimestamp)
         {
-            timestamp = TimeGen();
+            ts = TimeGen();
         }
 
-        return timestamp;
+        return ts;
     }
 }
