@@ -39,14 +39,11 @@ public class IdGeneratorBenchmarks
     public void GenerateIds() => For(0, NumberOfIds, index =>
     {
         var id = _idGenerator?.NextId() ?? 0;
-        if (_generatedIds is not null)
+        lock (_generatedIds!)
         {
-            lock (_generatedIds)
+            if (!_generatedIds.Add(id))
             {
-                if (!_generatedIds.Add(id))
-                {
-                    WriteLine(new StringBuilder().Append("Handle duplicate ID error: ").Append(id).ToString());
-                }
+                WriteLine(new StringBuilder().Append("Handle duplicate ID error: ").Append(id).ToString());
             }
         }
     });
