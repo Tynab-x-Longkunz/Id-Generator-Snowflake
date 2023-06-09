@@ -17,7 +17,7 @@ public class IdGeneratorBenchmarks
     /// <summary>
     /// Số lượng ID cần tạo
     /// </summary>
-    [Params(1_000, 10_000, 1000_00, 1_000_000)]
+    [Params(1_000, 10_000, 100_000, 1_000_000)]
     public int NumberOfIds { get; set; }
     #endregion
 
@@ -50,11 +50,5 @@ public class IdGeneratorBenchmarks
             }
         }
     });
-
-    /// <summary>
-    /// Dọn dẹp sau khi chạy bài kiểm tra.
-    /// </summary>
-    [GlobalCleanup]
-    public void Cleanup() => WriteLine($"Actual / Expected number of generated IDs: {_generatedIds?.Count} / {NumberOfIds}");
     #endregion
 }
