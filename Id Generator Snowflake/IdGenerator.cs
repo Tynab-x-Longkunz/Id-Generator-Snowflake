@@ -91,5 +91,20 @@ public class IdGenerator
             return ((ts - Twepoch) << TimestampLeftShift) | (DatacenterId << DC_ID_SHFT) | (WorkerId << WKR_ID_SHFT) | (Sequence & SEQ_MASK);
         }
     }
+
+    /// <summary>
+    /// Calculate data from id generated
+    /// </summary>
+    /// <param name="id">id</param>
+    /// <returns></returns>
+    public (DateTime, ulong, ulong) ParseId(ulong id)
+    {
+        var DatacenterId = (id >> DC_ID_SHFT) & ((1UL << DC_ID_BITS) - 1);
+        var WorkerId = (id >> WKR_ID_SHFT) & ((1UL << WKR_ID_BITS) - 1);
+        ulong timestamp = ((id >> TimestampLeftShift) + Twepoch);
+        DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds((long)timestamp);
+        DateTime dateTime = dateTimeOffset.UtcDateTime;
+        return (dateTime, WorkerId, DatacenterId);
+    }
     #endregion
 }

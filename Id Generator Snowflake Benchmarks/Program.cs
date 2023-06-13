@@ -6,9 +6,9 @@ using System.Diagnostics;
 using System.Text;
 using static System.Threading.Tasks.Parallel;
 
-var idGen = new IdGenerator(0, 0);
+var idGen = new IdGenerator(0, 2);
 var genIds = new HashSet<ulong>();
-var numIds = 1_000_000;
+var numIds = 1;
 var top = 10;
 
 var sw = new Stopwatch();
@@ -16,6 +16,7 @@ sw.Start();
 For(0, numIds, index =>
 {
     var id = idGen.NextId();
+    WriteLine("ID Generated: " + id);
     lock (genIds)
     {
         if (!genIds.Add(id))
@@ -23,6 +24,7 @@ For(0, numIds, index =>
             WriteLine(new StringBuilder().Append("Handle duplicate ID error: ").Append(id).ToString());
         }
     }
+    WriteLine($"ID Parsed - Time: {idGen.ParseId(id).Item1} - WorkerID: {idGen.ParseId(id).Item2} - DatacenterID: {idGen.ParseId(id).Item3}");
 });
 sw.Stop();
 
