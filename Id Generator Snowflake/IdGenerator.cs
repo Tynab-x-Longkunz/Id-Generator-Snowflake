@@ -14,7 +14,7 @@ public class IdGenerator
     /// <summary>
     /// Thời điểm Epoch (được sử dụng làm offset cho timestamp)
     /// </summary>
-    public const ulong Twepoch = 1_288_834_974_000;
+    public const ulong Twepoch = 1_672_531_200_000; // 01/012023 00:00:00
 
     /// <summary>
     /// Số bit cần dịch trái để lưu trữ timestamp
@@ -88,6 +88,7 @@ public class IdGenerator
             }
 
             _lastTimestamp = ts;
+
             return ((ts - Twepoch) << TimestampLeftShift) | (DatacenterId << DC_ID_SHFT) | (WorkerId << WKR_ID_SHFT) | (Sequence & SEQ_MASK);
         }
     }
