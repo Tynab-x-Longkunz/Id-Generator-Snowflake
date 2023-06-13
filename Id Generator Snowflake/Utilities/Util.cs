@@ -10,7 +10,7 @@ internal static class Util
     internal static ulong TimeGen() => (ulong)UtcNow.ToUnixTimeMilliseconds();
 
     /// <summary>
-    /// Tìm thời điểm timestamp kế tiếp lớn hơn hoặc bằng thời điểm cuối cùng.
+    /// Tìm thời điểm timestamp kế tiếp lớn hơn thời điểm cuối cùng.
     /// </summary>
     internal static ulong TilNextMillis(this ulong lastTimestamp)
     {
