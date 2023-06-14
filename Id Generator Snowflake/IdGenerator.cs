@@ -94,18 +94,19 @@ public class IdGenerator
     }
 
     /// <summary>
-    /// Calculate data from id generated
+    /// Phân tích một Id và trả về các thành phần của nó.
     /// </summary>
     /// <param name="id">id</param>
     /// <returns></returns>
-    public (DateTime, ulong, ulong) ParseId(ulong id)
+    public static (DateTime, ulong, ulong) ParseId(ulong id)
     {
-        var DatacenterId = (id >> DC_ID_SHFT) & ((1UL << DC_ID_BITS) - 1);
-        var WorkerId = (id >> WKR_ID_SHFT) & ((1UL << WKR_ID_BITS) - 1);
-        ulong timestamp = ((id >> TimestampLeftShift) + Twepoch);
-        DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds((long)timestamp);
-        DateTime dateTime = dateTimeOffset.UtcDateTime;
-        return (dateTime, WorkerId, DatacenterId);
+        var datacenterId = (id >> DC_ID_SHFT) & ((1UL << DC_ID_BITS) - 1);
+        var workerId = (id >> WKR_ID_SHFT) & ((1UL << WKR_ID_BITS) - 1);
+        var timestamp = (id >> TimestampLeftShift) + Twepoch;
+        var dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds((long)timestamp);
+        var dateTime = dateTimeOffset.UtcDateTime;
+
+        return (dateTime, workerId, datacenterId);
     }
     #endregion
 }
