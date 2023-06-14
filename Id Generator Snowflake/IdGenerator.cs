@@ -9,46 +9,43 @@ namespace Id_Generator_Snowflake;
 public class IdGenerator
 {
     #region Fields
-    private ulong _lastTimestamp = default; // Last timestamp recorded
+    private long _lastTimestamp = -1;       // Last timestamp recorded
     private readonly object _lock = new();  // Lock object for access synchronization
-
-    /// <summary>
-    /// Epoch timestamp (used as an offset for the timestamp)
-    /// </summary>
-    public const ulong Twepoch = 1_672_531_200_000; // 01/012023 00:00:00
-
-    /// <summary>
-    /// Number of bits to shift left to store the timestamp
-    /// </summary>
-    public const int TimestampLeftShift = SEQ_BITS + WKR_ID_BITS + DC_ID_BITS;
     #endregion
 
     #region Properties
     /// <summary>
     /// Worker Id of the IdGenerator
     /// </summary>
-    public ulong WorkerId { get; protected set; }
+    public long WorkerId { get; protected set; }
 
     /// <summary>
     /// Datacenter Id của IdGenerator
     /// </summary>
-    public ulong DatacenterId { get; protected set; }
+    public long DatacenterId { get; protected set; }
 
     /// <summary>
     /// Current sequence
     /// </summary>
-    public ulong Sequence { get; internal set; }
+    public long Sequence { get; internal set; }
     #endregion
 
     #region Constructors
-    public IdGenerator(ulong workerId, ulong datacenterId, ulong sequence = default)
+    /// <summary>
+    /// Initializes a new instance of the IdGenerator class with the specified worker ID, datacenter ID, and sequence.
+    /// </summary>
+    /// <param name="workerId">The ID of the worker.</param>
+    /// <param name="datacenterId">The ID of the datacenter.</param>
+    /// <param name="sequence">The initial sequence number.</param>
+    /// <exception cref="ArgumentException">Thrown when the worker ID or datacenter ID is invalid.</exception>
+    public IdGenerator(long workerId, long datacenterId, long sequence = default)
     {
-        if (workerId > MAX_WKR_ID)
+        if (workerId is < 0 or > MAX_WKR_ID)
         {
             throw new ArgumentException(new StringBuilder().Append(wkr_id_exc_pfx).Append(MAX_WKR_ID).Append(exc_sfx).ToString());
         }
 
-        if (datacenterId > MAX_DC_ID)
+        if (datacenterId is < 0 or > MAX_DC_ID)
         {
             throw new ArgumentException(new StringBuilder().Append(dc_id_exc_pfx).Append(MAX_DC_ID).Append(exc_sfx).ToString());
         }
@@ -64,23 +61,23 @@ public class IdGenerator
     /// Generate and return a new Id.
     /// </summary>
     /// <returns>A newly generated Id.</returns>
-    public ulong NextId()
+    public long NextId()
     {
         lock (_lock)
         {
-            var ts = TimeGen();
+            var curTs = TimeGen();
 
-            if (ts < _lastTimestamp)
+            if (curTs < _lastTimestamp)
             {
                 throw new Exception(ts_exc);
             }
-            else if (ts == _lastTimestamp)
+            else if (curTs == _lastTimestamp)
             {
-                Sequence = (Sequence + 1) & SEQ_MASK;
+                Sequence = (Sequence + 1) & MAX_SEQ;
 
                 if (Sequence is 0)
                 {
-                    ts = _lastTimestamp.TilNextMillis();
+                    curTs = _lastTimestamp.TilNextMillis();
                 }
             }
             else
@@ -88,30 +85,17 @@ public class IdGenerator
                 Sequence = default;
             }
 
-            _lastTimestamp = ts;
+            _lastTimestamp = curTs;
 
-            return ((ts - Twepoch) << TimestampLeftShift) | (DatacenterId << DC_ID_SHFT) | (WorkerId << WKR_ID_SHFT) | (Sequence & SEQ_MASK);
+            return ((curTs - TS_EPOCH) << TS_LEFT_SHFT) | (DatacenterId << DC_ID_SHFT) | (WorkerId << WKR_ID_SHFT) | (Sequence & MAX_SEQ);
         }
     }
 
-    ///<summary>
-    /// Parse an Id and return its components.
-    ///</summary>
-    /// <param name="id">The Id to be parsed.</param>
-    /// <returns>
-    /// A tuple consisting of three elements:
-    /// - DateTime: Represents the time corresponding to the Id.
-    /// - ulong: WorkerId of the Id.
-    /// - ulong: DatacenterId of the Id.
-    ///</returns>
-    public static (DateTime, ulong, ulong) ParseId(ulong id)
-    {
-        var datacenterId = (id >> DC_ID_SHFT) & ((1UL << DC_ID_BITS) - 1);
-        var workerId = (id >> WKR_ID_SHFT) & ((1UL << WKR_ID_BITS) - 1);
-        var timestamp = (id >> TimestampLeftShift) + Twepoch;
-        var dateTime = FromUnixTimeMilliseconds((long)timestamp).UtcDateTime;
-
-        return (dateTime, workerId, datacenterId);
-    }
+    /// <summary>
+    /// Extracts the timestamp, worker ID, and datacenter ID components from a Snowflake ID.
+    /// </summary>
+    /// <param name="id">The Snowflake ID to extract components from.</param>
+    /// <returns>A tuple containing the extracted timestamp, worker ID, and datacenter ID.</returns>
+    public static (DateTime, long, long) ExtractIdComponents(long id) => (FromUnixTimeMilliseconds((id >> TS_LEFT_SHFT) + TS_EPOCH).UtcDateTime, (id >> WKR_ID_SHFT) & ((1 << WKR_ID_BITS) - 1), (id >> DC_ID_SHFT) & ((1 << DC_ID_BITS) - 1));
     #endregion
 }

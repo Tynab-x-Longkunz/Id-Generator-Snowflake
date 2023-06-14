@@ -4,43 +4,82 @@
 using Id_Generator_Snowflake;
 using System.Diagnostics;
 using System.Text;
-using static System.Threading.Tasks.Parallel;
 using static Id_Generator_Snowflake.IdGenerator;
+using static System.Threading.Tasks.Parallel;
+using static System.Threading.Thread;
 
-var idGen = new IdGenerator(0, 2);
-var genIds = new HashSet<ulong>();
-var numIds = 1;
+var idGen = new IdGenerator(0, 0);
+var genIds = new HashSet<long>();
+var numIds = 100;
 var top = 10;
+var flow = 1;
 
-var sw = new Stopwatch();
-sw.Start();
-For(0, numIds, index =>
+switch (flow)
 {
-    var id = idGen.NextId();
-    WriteLine("ID Generated: " + id);
-    lock (genIds)
-    {
-        if (!genIds.Add(id))
+    case 1:
         {
-            WriteLine(new StringBuilder().Append("Handle duplicate ID error: ").Append(id).ToString());
-        }
-    }
-    WriteLine($"ID Parsed - Time: {IdGenerator.ParseId(id).Item1} - WorkerID: {IdGenerator.ParseId(id).Item2} - DatacenterID: {IdGenerator.ParseId(id).Item3}");
-});
-sw.Stop();
+            numIds = 1000000;
 
-var idsCnt = genIds.Count;
-if (numIds != idsCnt)
-{
-    WriteLine($"Handle mismatch between expected and actual number of generated IDs: {idsCnt} / {numIds}");
+            var sw = new Stopwatch();
+
+            sw.Start();
+
+            For(0, numIds, index =>
+            {
+                var id = idGen.NextId();
+
+                lock (genIds)
+                {
+                    if (!genIds.Add(id))
+                    {
+                        WriteLine(new StringBuilder().Append("Handle duplicate ID error: ").Append(id).ToString());
+                    }
+                }
+            });
+
+            sw.Stop();
+
+            var idsCnt = genIds.Count;
+
+            if (numIds != idsCnt)
+            {
+                WriteLine($"Handle mismatch between expected and actual number of generated IDs: {idsCnt} / {numIds}");
+            }
+
+            WriteLine($"Time: {sw.ElapsedMilliseconds:#,#} ms\n");
+
+            break;
+        }
+    case 2:
+        {
+            for (var i = 0; i < numIds; i++)
+            {
+                var id = idGen.NextId();
+
+                Sleep(100);
+
+                lock (genIds)
+                {
+                    if (!genIds.Add(id))
+                    {
+                        WriteLine(new StringBuilder().Append("Handle duplicate ID error: ").Append(id).ToString());
+                    }
+                }
+            }
+
+            break;
+        }
+    default:
+        {
+            break;
+        }
 }
 
-WriteLine($"Time: {sw.ElapsedMilliseconds:#,#} ms\n");
-
 WriteLine($"Top {top:#,#} of {numIds:#,#} IDs:");
+
 foreach (var id in genIds.Take(top))
 {
-    WriteLine(id);
+    WriteLine($"ID: {id} - Time: {ExtractIdComponents(id).Item1} - WorkerID: {ExtractIdComponents(id).Item2} - DatacenterID: {ExtractIdComponents(id).Item3}");
 }
 #endif
 

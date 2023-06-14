@@ -9,13 +9,13 @@ namespace Id_Generator_Snowflake_Benchmarks.Benchmarks;
 public class IdGeneratorBenchmarks
 {
     #region Fields
-    private IdGenerator? _idGenerator;      // Đối tượng IdGenerator để tạo ID
-    private HashSet<ulong>? _generatedIds;  // Danh sách ID đã được tạo
+    private IdGenerator? _idGenerator;      // The IdGenerator object for generating IDs
+    private HashSet<long>? _generatedIds;   // The list of generated IDs
     #endregion
 
     #region Properties
     /// <summary>
-    /// Số lượng ID cần tạo
+    /// The number of IDs to generate.
     /// </summary>
     [Params(1_000, 10_000, 100_000, 1_000_000)]
     public int Size { get; set; }
@@ -23,17 +23,17 @@ public class IdGeneratorBenchmarks
 
     #region Methods
     /// <summary>
-    /// Thiết lập ban đầu trước khi chạy bài kiểm tra.
+    /// Initial setup before running the benchmark.
     /// </summary>
     [GlobalSetup]
     public void Setup()
     {
         _idGenerator = new IdGenerator(0, 0);
-        _generatedIds = new HashSet<ulong>();
+        _generatedIds = new HashSet<long>();
     }
 
     /// <summary>
-    /// Tạo ID bằng cách gọi phương thức NextId từ đối tượng IdGenerator.
+    /// Generate IDs by calling the NextId method from the IdGenerator object.
     /// </summary>
     [Benchmark]
     public void GenerateIds() => For(0, Size, index =>
