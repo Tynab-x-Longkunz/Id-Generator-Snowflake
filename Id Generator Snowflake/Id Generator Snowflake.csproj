@@ -19,7 +19,8 @@
     <RepositoryUrl>https://github.com/Tynab-x-Longkunz/Id-Generator-Snowflake</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>C#, .NET, Library</PackageTags>
-    <PackageReleaseNotes>IdGeneratorSnowflake is licensed under the MIT License.</PackageReleaseNotes>
+    <PackageReleaseNotes>Upgrade 64-bit and add extract ID components method</PackageReleaseNotes>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
