@@ -2,29 +2,30 @@
 using static Id_Generator_Snowflake.Common.Constant;
 using static Id_Generator_Snowflake.Properties.Resources;
 using static Id_Generator_Snowflake.Utilities.Util;
+using static System.DateTimeOffset;
 
 namespace Id_Generator_Snowflake;
 
 public class IdGenerator
 {
     #region Fields
-    private ulong _lastTimestamp = default; // Thời điểm timestamp cuối cùng
-    private readonly object _lock = new();  // Đối tượng lock để đồng bộ hóa truy cập
+    private ulong _lastTimestamp = default; // Last timestamp recorded
+    private readonly object _lock = new();  // Lock object for access synchronization
 
     /// <summary>
-    /// Thời điểm Epoch (được sử dụng làm offset cho timestamp)
+    /// Epoch timestamp (used as an offset for the timestamp)
     /// </summary>
     public const ulong Twepoch = 1_672_531_200_000; // 01/012023 00:00:00
 
     /// <summary>
-    /// Số bit cần dịch trái để lưu trữ timestamp
+    /// Number of bits to shift left to store the timestamp
     /// </summary>
     public const int TimestampLeftShift = SEQ_BITS + WKR_ID_BITS + DC_ID_BITS;
     #endregion
 
     #region Properties
     /// <summary>
-    /// Worker Id của IdGenerator
+    /// Worker Id of the IdGenerator
     /// </summary>
     public ulong WorkerId { get; protected set; }
 
@@ -34,7 +35,7 @@ public class IdGenerator
     public ulong DatacenterId { get; protected set; }
 
     /// <summary>
-    /// Sequence hiện tại
+    /// Current sequence
     /// </summary>
     public ulong Sequence { get; internal set; }
     #endregion
@@ -60,9 +61,9 @@ public class IdGenerator
 
     #region Methods
     /// <summary>
-    /// Tạo và trả về một Id mới.
+    /// Generate and return a new Id.
     /// </summary>
-    /// <returns>Một Id mới được tạo.</returns>
+    /// <returns>A newly generated Id.</returns>
     public ulong NextId()
     {
         lock (_lock)
@@ -93,18 +94,22 @@ public class IdGenerator
         }
     }
 
-    /// <summary>
-    /// Phân tích một Id và trả về các thành phần của nó.
-    /// </summary>
-    /// <param name="id">id</param>
-    /// <returns></returns>
+    ///<summary>
+    /// Parse an Id and return its components.
+    ///</summary>
+    /// <param name="id">The Id to be parsed.</param>
+    /// <returns>
+    /// A tuple consisting of three elements:
+    /// - DateTime: Represents the time corresponding to the Id.
+    /// - ulong: WorkerId of the Id.
+    /// - ulong: DatacenterId of the Id.
+    ///</returns>
     public static (DateTime, ulong, ulong) ParseId(ulong id)
     {
         var datacenterId = (id >> DC_ID_SHFT) & ((1UL << DC_ID_BITS) - 1);
         var workerId = (id >> WKR_ID_SHFT) & ((1UL << WKR_ID_BITS) - 1);
         var timestamp = (id >> TimestampLeftShift) + Twepoch;
-        var dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds((long)timestamp);
-        var dateTime = dateTimeOffset.UtcDateTime;
+        var dateTime = FromUnixTimeMilliseconds((long)timestamp).UtcDateTime;
 
         return (dateTime, workerId, datacenterId);
     }

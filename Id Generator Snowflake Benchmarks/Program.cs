@@ -5,6 +5,7 @@ using Id_Generator_Snowflake;
 using System.Diagnostics;
 using System.Text;
 using static System.Threading.Tasks.Parallel;
+using static Id_Generator_Snowflake.IdGenerator;
 
 var idGen = new IdGenerator(0, 2);
 var genIds = new HashSet<ulong>();
@@ -24,7 +25,7 @@ For(0, numIds, index =>
             WriteLine(new StringBuilder().Append("Handle duplicate ID error: ").Append(id).ToString());
         }
     }
-    WriteLine($"ID Parsed - Time: {idGen.ParseId(id).Item1} - WorkerID: {idGen.ParseId(id).Item2} - DatacenterID: {idGen.ParseId(id).Item3}");
+    WriteLine($"ID Parsed - Time: {IdGenerator.ParseId(id).Item1} - WorkerID: {IdGenerator.ParseId(id).Item2} - DatacenterID: {IdGenerator.ParseId(id).Item3}");
 });
 sw.Stop();
 

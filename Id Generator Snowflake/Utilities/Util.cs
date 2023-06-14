@@ -5,12 +5,12 @@ namespace Id_Generator_Snowflake.Utilities;
 internal static class Util
 {
     /// <summary>
-    /// Lấy thời điểm timestamp hiện tại.
+    /// Get the current timestamp.
     /// </summary>
     internal static ulong TimeGen() => (ulong)UtcNow.ToUnixTimeMilliseconds();
 
     /// <summary>
-    /// Tìm thời điểm timestamp kế tiếp lớn hơn thời điểm cuối cùng.
+    /// Find the next timestamp greater than the last timestamp.
     /// </summary>
     internal static ulong TilNextMillis(this ulong lastTimestamp)
     {
