@@ -18,7 +18,7 @@ public class IdGeneratorBenchmarks
     /// Số lượng ID cần tạo
     /// </summary>
     [Params(1_000, 10_000, 100_000, 1_000_000)]
-    public int NumberOfIds { get; set; }
+    public int Size { get; set; }
     #endregion
 
     #region Methods
@@ -36,7 +36,7 @@ public class IdGeneratorBenchmarks
     /// Tạo ID bằng cách gọi phương thức NextId từ đối tượng IdGenerator.
     /// </summary>
     [Benchmark]
-    public void GenerateIds() => For(0, NumberOfIds, index =>
+    public void GenerateIds() => For(0, Size, index =>
     {
         var id = _idGenerator?.NextId() ?? 0;
         lock (_generatedIds!)
