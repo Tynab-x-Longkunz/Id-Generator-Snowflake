@@ -2,9 +2,9 @@
 
 internal static class Constant
 {
-    internal const int WKR_ID_BITS = 7; // Number of bits used to store the Worker Id
+    internal const int WKR_ID_BITS = 5; // Number of bits used to store the Worker Id
     internal const int DC_ID_BITS = 5;  // Number of bits used to store the Datacenter Id
-    internal const int SEQ_BITS = 11;   // Number of bits used to store the Sequence
+    internal const int SEQ_BITS = 13;   // Number of bits used to store the Sequence
 
     internal const long MAX_WKR_ID = -1 ^ (-1 << WKR_ID_BITS);  // Maximum value of the Worker Id
     internal const long MAX_DC_ID = -1 ^ (-1 << DC_ID_BITS);    // Maximum value of the Datacenter Id

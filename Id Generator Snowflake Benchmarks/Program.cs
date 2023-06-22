@@ -7,8 +7,12 @@ using System.Text;
 using static Id_Generator_Snowflake.IdGenerator;
 using static System.Threading.Tasks.Parallel;
 using static System.Threading.Thread;
+using static YANLib.YANNum;
 
-var idGen = new IdGenerator(0, 0);
+var wkrId = GenerateRandomLong(0, 31);
+var dcId = GenerateRandomLong(0, 31);
+WriteLine($"WorkerID (setup): {wkrId} - DatacenterID (setup): {dcId}");
+var idGen = new IdGenerator(wkrId, dcId);
 var genIds = new HashSet<long>();
 var numIds = 100;
 var top = 10;
@@ -79,7 +83,8 @@ WriteLine($"Top {top:#,#} of {numIds:#,#} IDs:");
 
 foreach (var id in genIds.Take(top))
 {
-    WriteLine($"ID: {id} - Time: {ExtractIdComponents(id).Item1} - WorkerID: {ExtractIdComponents(id).Item2} - DatacenterID: {ExtractIdComponents(id).Item3}");
+    var tupl = ExtractIdComponents(id);
+    WriteLine($"ID (generated): {id} - Time (extracted): {tupl.Item1} - WorkerID (extracted): {tupl.Item2} - DatacenterID (extracted): {tupl.Item3}");
 }
 #endif
 
