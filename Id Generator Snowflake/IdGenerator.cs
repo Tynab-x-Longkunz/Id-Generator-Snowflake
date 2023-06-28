@@ -32,12 +32,12 @@ public class IdGenerator
 
     #region Constructors
     /// <summary>
-    /// Initializes a new instance of the IdGenerator class with the specified worker ID, datacenter ID, and sequence.
+    /// Initializes a new instance of the IdGenerator class with the specified worker Id, datacenter Id, and sequence.
     /// </summary>
-    /// <param name="workerId">The ID of the worker.</param>
-    /// <param name="datacenterId">The ID of the datacenter.</param>
+    /// <param name="workerId">The Id of the worker.</param>
+    /// <param name="datacenterId">The Id of the datacenter.</param>
     /// <param name="sequence">The initial sequence number.</param>
-    /// <exception cref="ArgumentException">Thrown when the worker ID or datacenter ID is invalid.</exception>
+    /// <exception cref="ArgumentException">Thrown when the worker Id or datacenter Id is invalid.</exception>
     public IdGenerator(long workerId, long datacenterId, long sequence = default)
     {
         if (workerId is < 0 or > MAX_WKR_ID)
@@ -92,10 +92,23 @@ public class IdGenerator
     }
 
     /// <summary>
-    /// Extracts the timestamp, worker ID, and datacenter ID components from a Snowflake ID.
+    /// Generate and return a new alphabetic Id.
     /// </summary>
-    /// <param name="id">The Snowflake ID to extract components from.</param>
-    /// <returns>A tuple containing the extracted timestamp, worker ID, and datacenter ID.</returns>
+    /// <returns>A newly generated alphabetic Id.</returns>
+    public string NextIdAlphabetic() => NextId().ConvertToBaseAlphabetic();
+
+    /// <summary>
+    /// Extracts the timestamp, worker Id, and datacenter Id components from a Snowflake Id.
+    /// </summary>
+    /// <param name="id">The Snowflake Id to extract components from.</param>
+    /// <returns>A tuple containing the extracted timestamp, worker Id, and datacenter Id.</returns>
     public static (DateTime, long, long) ExtractIdComponents(long id) => (FromUnixTimeMilliseconds((id >> TS_LEFT_SHFT) + TS_EPOCH).UtcDateTime, (id >> WKR_ID_SHFT) & ((1 << WKR_ID_BITS) - 1), (id >> DC_ID_SHFT) & ((1 << DC_ID_BITS) - 1));
+
+    /// <summary>
+    /// Extracts the timestamp, worker Id, and datacenter Id components from an alphabetic Snowflake Id.
+    /// </summary>
+    /// <param name="id">The alphabetic Snowflake Id to extract components from.</param>
+    /// <returns>A tuple containing the extracted timestamp, worker Id, and datacenter Id.</returns>
+    public static (DateTime, long, long) ExtractIdAlphabeticComponents(string id) => ExtractIdComponents(id.ConvertFromBaseAlphabetic());
     #endregion
 }

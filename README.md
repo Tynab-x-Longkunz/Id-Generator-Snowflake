@@ -45,11 +45,11 @@ If you have any suggestions, issues, or contributions, feel free to open an issu
 ## CODE DEMO
 Here's an example of generating unique IDs using the IdGeneratorSnowflake library:
 ```c#
-// Create an instance of IdGenerator with Worker ID: 1, Datacenter ID: 2
+// Create an instance of IdGenerator with Worker Id: 1, Datacenter Id: 2
 var idGenerator = new IdGenerator(1, 2);
 
-// Generate a new unique ID
+// Generate a new unique Id
 ulong id = idGenerator.NextId();
 
-Console.WriteLine($"Generated ID: {id}");
+Console.WriteLine($"Generated Id: {id}");
 ```

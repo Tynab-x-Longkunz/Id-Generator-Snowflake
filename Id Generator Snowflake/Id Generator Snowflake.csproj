@@ -19,8 +19,8 @@
     <RepositoryUrl>https://github.com/Tynab-x-Longkunz/Id-Generator-Snowflake</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>C#, .NET, Library</PackageTags>
-    <PackageReleaseNotes>Upgrade 64-bit and add extract ID components method</PackageReleaseNotes>
-    <Version>1.0.1</Version>
+    <PackageReleaseNotes>Add generate ID alphabetic</PackageReleaseNotes>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

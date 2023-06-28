@@ -1,4 +1,5 @@
-﻿using static System.DateTimeOffset;
+﻿using static Id_Generator_Snowflake.Common.Constant;
+using static System.DateTimeOffset;
 
 namespace Id_Generator_Snowflake.Utilities;
 
@@ -22,5 +23,40 @@ internal static class Util
         }
 
         return curTs;
+    }
+
+    /// <summary>
+    /// Convert a numeric value to an alphabetic representation.
+    /// </summary>
+    /// <param name="value">The numeric value to convert.</param>
+    /// <returns>The alphabetic representation of the numeric value.</returns>
+    internal static string ConvertToBaseAlphabetic(this long value)
+    {
+        var rslt = string.Empty;
+
+        do
+        {
+            rslt = BASE_AL_CHARS[(int)(value % BASE_AL_CHARS_LEN)] + rslt;
+            value /= BASE_AL_CHARS_LEN;
+        } while (value > 0);
+
+        return rslt;
+    }
+
+    /// <summary>
+    /// Convert an alphabetic value to its numeric representation.
+    /// </summary>
+    /// <param name="value">The alphabetic value to convert.</param>
+    /// <returns>The numeric representation of the alphabetic value.</returns>
+    internal static long ConvertFromBaseAlphabetic(this string value)
+    {
+        var rslt = 0L;
+
+        for (var i = 0; i < value.Length; i++)
+        {
+            rslt = rslt * BASE_AL_CHARS_LEN + BASE_AL_CHARS.IndexOf(value[i]);
+        }
+
+        return rslt;
     }
 }

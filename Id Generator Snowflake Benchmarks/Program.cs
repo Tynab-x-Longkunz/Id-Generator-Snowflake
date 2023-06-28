@@ -11,12 +11,12 @@ using static YANLib.YANNum;
 
 var wkrId = GenerateRandomLong(0, 31);
 var dcId = GenerateRandomLong(0, 31);
-WriteLine($"WorkerID (setup): {wkrId} - DatacenterID (setup): {dcId}");
+WriteLine($"WorkerId (setup): {wkrId} - DatacenterId (setup): {dcId}");
 var idGen = new IdGenerator(wkrId, dcId);
-var genIds = new HashSet<long>();
+var genIds = new HashSet<object>();
 var numIds = 100;
 var top = 10;
-var flow = 1;
+var flow = 2;
 
 switch (flow)
 {
@@ -36,7 +36,7 @@ switch (flow)
                 {
                     if (!genIds.Add(id))
                     {
-                        WriteLine(new StringBuilder().Append("Handle duplicate ID error: ").Append(id).ToString());
+                        WriteLine(new StringBuilder().Append("Handle duplicate Id error: ").Append(id).ToString());
                     }
                 }
             });
@@ -47,7 +47,7 @@ switch (flow)
 
             if (numIds != idsCnt)
             {
-                WriteLine($"Handle mismatch between expected and actual number of generated IDs: {idsCnt} / {numIds}");
+                WriteLine($"Handle mismatch between expected and actual number of generated Ids: {idsCnt} / {numIds}");
             }
 
             WriteLine($"Time: {sw.ElapsedMilliseconds:#,#} ms\n");
@@ -55,6 +55,40 @@ switch (flow)
             break;
         }
     case 2:
+        {
+            numIds = 1000000;
+
+            var sw = new Stopwatch();
+
+            sw.Start();
+
+            For(0, numIds, index =>
+            {
+                var id = idGen.NextIdAlphabetic();
+
+                lock (genIds)
+                {
+                    if (!genIds.Add(id))
+                    {
+                        WriteLine(new StringBuilder().Append("Handle duplicate Id error: ").Append(id).ToString());
+                    }
+                }
+            });
+
+            sw.Stop();
+
+            var idsCnt = genIds.Count;
+
+            if (numIds != idsCnt)
+            {
+                WriteLine($"Handle mismatch between expected and actual number of generated Ids: {idsCnt} / {numIds}");
+            }
+
+            WriteLine($"Time: {sw.ElapsedMilliseconds:#,#} ms\n");
+
+            break;
+        }
+    case 3:
         {
             for (var i = 0; i < numIds; i++)
             {
@@ -66,7 +100,7 @@ switch (flow)
                 {
                     if (!genIds.Add(id))
                     {
-                        WriteLine(new StringBuilder().Append("Handle duplicate ID error: ").Append(id).ToString());
+                        WriteLine(new StringBuilder().Append("Handle duplicate Id error: ").Append(id).ToString());
                     }
                 }
             }
@@ -79,12 +113,25 @@ switch (flow)
         }
 }
 
-WriteLine($"Top {top:#,#} of {numIds:#,#} IDs:");
+WriteLine($"Top {top:#,#} of {numIds:#,#} Ids:");
 
 foreach (var id in genIds.Take(top))
 {
-    var tupl = ExtractIdComponents(id);
-    WriteLine($"ID (generated): {id} - Time (extracted): {tupl.Item1} - WorkerID (extracted): {tupl.Item2} - DatacenterID (extracted): {tupl.Item3}");
+    (DateTime, long, long) tupl;
+    switch (flow)
+    {
+        case 2:
+            {
+                tupl = ExtractIdAlphabeticComponents((string)id);
+                break;
+            }
+        default:
+            {
+                tupl = ExtractIdComponents((long)id);
+                break;
+            }
+    }
+    WriteLine($"Id (generated): {id} - Time (extracted): {tupl.Item1} - WorkerId (extracted): {tupl.Item2} - DatacenterId (extracted): {tupl.Item3}");
 }
 #endif
 

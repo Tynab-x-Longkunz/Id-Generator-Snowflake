@@ -9,13 +9,13 @@ namespace Id_Generator_Snowflake_Benchmarks.Benchmarks;
 public class IdGeneratorBenchmarks
 {
     #region Fields
-    private IdGenerator? _idGenerator;      // The IdGenerator object for generating IDs
-    private HashSet<long>? _generatedIds;   // The list of generated IDs
+    private IdGenerator? _idGenerator;      // The IdGenerator object for generating Ids
+    private HashSet<long>? _generatedIds;   // The list of generated Ids
     #endregion
 
     #region Properties
     /// <summary>
-    /// The number of IDs to generate.
+    /// The number of Ids to generate.
     /// </summary>
     [Params(1_000, 10_000, 100_000, 1_000_000)]
     public int Size { get; set; }
@@ -33,7 +33,7 @@ public class IdGeneratorBenchmarks
     }
 
     /// <summary>
-    /// Generate IDs by calling the NextId method from the IdGenerator object.
+    /// Generate Ids by calling the NextId method from the IdGenerator object.
     /// </summary>
     [Benchmark]
     public void GenerateIds() => For(0, Size, index =>
@@ -43,7 +43,7 @@ public class IdGeneratorBenchmarks
         {
             if (!_generatedIds.Add(id))
             {
-                WriteLine(new StringBuilder().Append("Handle duplicate ID error: ").Append(id).ToString());
+                WriteLine(new StringBuilder().Append("Handle duplicate Id error: ").Append(id).ToString());
             }
         }
     });
