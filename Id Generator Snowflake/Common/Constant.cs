@@ -1,6 +1,6 @@
 ﻿namespace Id_Generator_Snowflake.Common;
 
-internal static class Constant
+internal readonly struct Constant
 {
     internal const int WKR_ID_BITS = 5; // Number of bits used to store the Worker Id
     internal const int DC_ID_BITS = 5;  // Number of bits used to store the Datacenter Id

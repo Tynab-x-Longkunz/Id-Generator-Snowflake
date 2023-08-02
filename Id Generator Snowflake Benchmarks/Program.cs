@@ -11,7 +11,9 @@ using static YANLib.YANNum;
 
 var wkrId = GenerateRandomLong(0, 31);
 var dcId = GenerateRandomLong(0, 31);
+
 WriteLine($"WorkerId (setup): {wkrId} - DatacenterId (setup): {dcId}");
+
 var idGen = new IdGenerator(wkrId, dcId);
 var genIds = new HashSet<object>();
 var numIds = 100;
@@ -118,6 +120,7 @@ WriteLine($"Top {top:#,#} of {numIds:#,#} Ids:");
 foreach (var id in genIds.Take(top))
 {
     (DateTime, long, long) tupl;
+
     switch (flow)
     {
         case 2:
@@ -131,12 +134,14 @@ foreach (var id in genIds.Take(top))
                 break;
             }
     }
+
     WriteLine($"Id (generated): {id} - Time (extracted): {tupl.Item1} - WorkerId (extracted): {tupl.Item2} - DatacenterId (extracted): {tupl.Item3}");
 }
 #endif
 
 #if RELEASE
 using Id_Generator_Snowflake_Benchmarks.Benchmarks;
+
 using static BenchmarkDotNet.Running.BenchmarkRunner;
 
 _ = Run<IdGeneratorBenchmarks>();
