@@ -39,6 +39,7 @@ public class IdGeneratorBenchmarks
     public void GenerateIds() => For(0, Size, index =>
     {
         var id = _idGenerator?.NextId() ?? 0;
+
         lock (_generatedIds!)
         {
             if (!_generatedIds.Add(id))
