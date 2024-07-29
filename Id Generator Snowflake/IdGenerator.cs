@@ -60,8 +60,9 @@ public class IdGenerator
     /// <summary>
     /// Generate and return a new Id.
     /// </summary>
+    /// <param name="timestampEpoch">The timestamp epoch.</param>
     /// <returns>A newly generated Id.</returns>
-    public long NextId()
+    public long NextId(long timestampEpoch = TS_EPOCH)
     {
         lock (_lock)
         {
@@ -87,7 +88,7 @@ public class IdGenerator
 
             _lastTimestamp = curTs;
 
-            return ((curTs - TS_EPOCH) << TS_LEFT_SHFT) | (DatacenterId << DC_ID_SHFT) | (WorkerId << WKR_ID_SHFT) | (Sequence & MAX_SEQ);
+            return ((curTs - timestampEpoch) << TS_LEFT_SHFT) | (DatacenterId << DC_ID_SHFT) | (WorkerId << WKR_ID_SHFT) | (Sequence & MAX_SEQ);
         }
     }
 
@@ -95,20 +96,25 @@ public class IdGenerator
     /// Generate and return a new alphabetic Id.
     /// </summary>
     /// <returns>A newly generated alphabetic Id.</returns>
-    public string NextIdAlphabetic() => NextId().ConvertToBaseAlphabetic();
+    public string NextIdAlphabetic(long timestampEpoch = TS_EPOCH) => NextId(timestampEpoch).ConvertToBaseAlphabetic();
 
     /// <summary>
     /// Extracts the timestamp, worker Id, and datacenter Id components from a Snowflake Id.
     /// </summary>
     /// <param name="id">The Snowflake Id to extract components from.</param>
+    /// <param name="timestampEpoch">The timestamp epoch.</param>
+    /// <param name="sequence">The sequence number.</param>
     /// <returns>A tuple containing the extracted timestamp, worker Id, and datacenter Id.</returns>
-    public static (DateTime, long, long) ExtractIdComponents(long id) => (FromUnixTimeMilliseconds((id >> TS_LEFT_SHFT) + TS_EPOCH).UtcDateTime, (id >> WKR_ID_SHFT) & ((1 << WKR_ID_BITS) - 1), (id >> DC_ID_SHFT) & ((1 << DC_ID_BITS) - 1));
+    public static (DateTime Timestamp, long WorkerId, long DatacenterId) ExtractIdComponents(long id, long timestampEpoch = TS_EPOCH, long sequence = default)
+        => (FromUnixTimeMilliseconds((id >> TS_LEFT_SHFT) + timestampEpoch - sequence).UtcDateTime, (id >> WKR_ID_SHFT) & ((1 << WKR_ID_BITS) - 1), (id >> DC_ID_SHFT) & ((1 << DC_ID_BITS) - 1));
 
     /// <summary>
     /// Extracts the timestamp, worker Id, and datacenter Id components from an alphabetic Snowflake Id.
     /// </summary>
     /// <param name="id">The alphabetic Snowflake Id to extract components from.</param>
+    /// <param name="sequence">The sequence number.</param>
     /// <returns>A tuple containing the extracted timestamp, worker Id, and datacenter Id.</returns>
-    public static (DateTime, long, long) ExtractIdAlphabeticComponents(string id) => ExtractIdComponents(id.ConvertFromBaseAlphabetic());
+    public static (DateTime Timestamp, long WorkerId, long DatacenterId) ExtractIdAlphabeticComponents(string id, long timestampEpoch = TS_EPOCH, long sequence = default)
+        => ExtractIdComponents(id.ConvertFromBaseAlphabetic(), timestampEpoch, sequence);
     #endregion
 }

@@ -18,9 +18,11 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/Tynab-x-Longkunz/Id-Generator-Snowflake</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>C#, .NET, Library</PackageTags>
-    <PackageReleaseNotes>Add generate ID alphabetic</PackageReleaseNotes>
-    <Version>1.0.2</Version>
+    <PackageTags>C#, .NET, Library, IdGenerator, SnowflakeId</PackageTags>
+    <PackageReleaseNotes>Upgrade:
+- Input Timestamp Epoch (optional)
+- Extract with Sequence</PackageReleaseNotes>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
