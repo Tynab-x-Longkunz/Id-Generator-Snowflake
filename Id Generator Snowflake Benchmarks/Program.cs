@@ -18,7 +18,7 @@ var idGen = new IdGenerator(wkrId, dcId);
 var genIds = new HashSet<object>();
 var numIds = 100;
 var top = 10;
-var flow = 2;
+var flow = 3;
 
 switch (flow)
 {
