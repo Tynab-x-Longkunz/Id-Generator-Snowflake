@@ -29,7 +29,7 @@ public class IdGeneratorBenchmarks
     public void Setup()
     {
         _idGenerator = new IdGenerator(0, 0);
-        _generatedIds = new HashSet<long>();
+        _generatedIds = [];
     }
 
     /// <summary>

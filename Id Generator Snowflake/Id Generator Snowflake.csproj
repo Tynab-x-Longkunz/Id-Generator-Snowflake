@@ -1,58 +1,60 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Id_Generator_Snowflake</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <ApplicationIcon>ic.ico</ApplicationIcon>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageId>TynabXLongkunz.IdGeneratorSnowflake</PackageId>
-    <Title>Id Generator Snowflake</Title>
-    <Authors>Tynab x Longkunz</Authors>
-    <Company>TxL</Company>
-    <Description>IdGeneratorSnowflake is a C# library that provides a unique ID generation mechanism based on the Snowflake algorithm. It allows you to generate globally unique IDs with the ability to specify Worker ID and Datacenter ID.</Description>
-    <Copyright>Copyright ©  2023</Copyright>
-    <PackageProjectUrl>https://github.com/Tynab-x-Longkunz</PackageProjectUrl>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/Tynab-x-Longkunz/Id-Generator-Snowflake</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>C#, .NET, Library, IdGenerator, SnowflakeId</PackageTags>
-    <PackageReleaseNotes>Upgrade:
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<ApplicationIcon>ic.ico</ApplicationIcon>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageId>TynabXLongkunz.IdGeneratorSnowflake</PackageId>
+		<Title>Id Generator Snowflake</Title>
+		<Authors>Tynab x Longkunz</Authors>
+		<Company>TxL</Company>
+		<Description>IdGeneratorSnowflake is a C# library that provides a unique ID generation mechanism based on the Snowflake algorithm. It allows you to generate globally unique IDs with the ability to specify Worker ID and Datacenter ID.</Description>
+		<Copyright>Copyright ©  2023</Copyright>
+		<PackageProjectUrl>https://github.com/Tynab-x-Longkunz</PackageProjectUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/Tynab-x-Longkunz/Id-Generator-Snowflake</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>C#, .NET, Library, IdGenerator, SnowflakeId</PackageTags>
+		<PackageReleaseNotes>Upgrade:
 - Input Timestamp Epoch (optional)
 - Extract with Sequence (optional)</PackageReleaseNotes>
-    <Version>2.0.0</Version>
-  </PropertyGroup>
+		<Version>2.0.0</Version>
+		<LangVersion>preview</LangVersion>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="ic.ico" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="ic.ico" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\res\icon.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\res\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
 
 </Project>
