@@ -21,7 +21,7 @@
     <PackageTags>C#, .NET, Library, IdGenerator, SnowflakeId</PackageTags>
     <PackageReleaseNotes>Upgrade:
 - Input Timestamp Epoch (optional)
-- Extract with Sequence</PackageReleaseNotes>
+- Extract with Sequence (optional)</PackageReleaseNotes>
     <Version>2.0.0</Version>
   </PropertyGroup>
 
