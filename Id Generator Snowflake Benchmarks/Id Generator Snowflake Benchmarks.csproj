@@ -1,20 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Id_Generator_Snowflake_Benchmarks</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<RootNamespace>Id_Generator_Snowflake_Benchmarks</RootNamespace>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>preview</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
-    <PackageReference Include="Tynab.YANLib" Version="3.1.7" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
+		<PackageReference Include="Tynab.YANLib" Version="3.1.7" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Id Generator Snowflake\Id Generator Snowflake.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Id Generator Snowflake\Id Generator Snowflake.csproj" />
+	</ItemGroup>
 
 </Project>
